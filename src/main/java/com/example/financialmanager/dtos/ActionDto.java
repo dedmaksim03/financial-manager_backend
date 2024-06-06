@@ -22,4 +22,18 @@ public class ActionDto {
 
     private String message;
 
+    private Short actionTypeId;
+
+    private String actionType;
+
+    private Long categoryId;
+
+    private String category;
+
+    private Long accountId;
+
+    private String account;
+
+    private Long userId;
+
 }

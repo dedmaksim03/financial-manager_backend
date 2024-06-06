@@ -1,6 +1,7 @@
 package com.example.financialmanager.repositories;
 
-import com.example.financialmanager.entities.User;
+import com.example.financialmanager.entities.ActionType;
+import com.example.financialmanager.entities.Category;
 import jakarta.annotation.Nonnull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String username);
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
+    @Override
     @Nonnull
-    Optional<User> findById(@Nonnull Long id);
+    Optional<Category> findById(@Nonnull Long id);
 }
