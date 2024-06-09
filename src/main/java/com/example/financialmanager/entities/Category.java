@@ -21,6 +21,10 @@ public class Category {
     private Category category;
 
     @ManyToOne
+    @JoinColumn(name = "type_id")
+    private CategoryType categoryType;
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 }

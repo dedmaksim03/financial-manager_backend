@@ -1,6 +1,6 @@
 package com.example.financialmanager.repositories;
 
-import com.example.financialmanager.entities.ActionType;
+import com.example.financialmanager.entities.CategoryType;
 import jakarta.annotation.Nonnull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ActionTypeRepository extends JpaRepository<ActionType, Short> {
+public interface CategoryTypeRepository extends JpaRepository<CategoryType, Short> {
 
     @Override
     @Nonnull
-    Optional<ActionType> findById(@Nonnull Short id);
+    Optional<CategoryType> findById(@Nonnull Short id);
 }

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ActionService {
     private final ActionRepository actionRepository;
-    private final ActionTypeService actionTypeService;
+    private final CategoryTypeService categoryTypeService;
     private final CategoryService categoryService;
     private final AccountSerivce accountSerivce;
     private final UserService userService;
@@ -31,8 +31,6 @@ public class ActionService {
                  action.getDate(),
                  action.getSum(),
                  action.getMessage(),
-                 action.getActionType().getId(),
-                 action.getActionType().getName(),
                  action.getCategory().getId(),
                  action.getCategory().getName(),
                  action.getAccount().getId(),
@@ -48,14 +46,12 @@ public class ActionService {
         System.out.println(actionDto.getDate().toString() +
                 actionDto.getSum().toString() +
                 actionDto.getMessage() +
-                actionDto.getActionTypeId().toString() +
                 actionDto.getCategoryId().toString() +
                 actionDto.getAccountId().toString());
         Action newAction = this.save(new Action(
                 actionDto.getDate(),
                 actionDto.getSum(),
                 actionDto.getMessage(),
-                actionTypeService.getActionTypeById(actionDto.getActionTypeId()),
                 categoryService.getCategoryById(actionDto.getCategoryId()),
                 accountSerivce.getAccountById(actionDto.getAccountId()),
                 user
@@ -65,8 +61,6 @@ public class ActionService {
                 newAction.getDate(),
                 newAction.getSum(),
                 newAction.getMessage(),
-                newAction.getActionType().getId(),
-                newAction.getActionType().getName(),
                 newAction.getCategory().getId(),
                 newAction.getCategory().getName(),
                 newAction.getAccount().getId(),

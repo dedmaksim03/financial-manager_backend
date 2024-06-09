@@ -12,17 +12,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class Action {
-    /*TO DO
-    * Нужно убрать тип действия из actions и добавить ее к категории*/
-    public Action(Date date, Double sum, String message, ActionType actionType, Category category, Account account, User user){
-        this.date = date;
-        this.sum = sum;
-        this.message = message;
-        this.actionType = actionType;
-        this.account = account;
-        this.category = category;
-        this.user = user;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,10 +28,6 @@ public class Action {
     private String message;
 
     @ManyToOne
-    @JoinColumn(name = "type_id")
-    private ActionType actionType;
-
-    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -53,4 +38,13 @@ public class Action {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Action(Date date, Double sum, String message, Category category, Account account, User user){
+        this.date = date;
+        this.sum = sum;
+        this.message = message;
+        this.account = account;
+        this.category = category;
+        this.user = user;
+    }
 }
