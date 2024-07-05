@@ -1,10 +1,5 @@
 package com.example.financialmanager.dtos;
 
-import com.example.financialmanager.entities.Account;
-import com.example.financialmanager.entities.ActionType;
-import com.example.financialmanager.entities.Category;
-import com.example.financialmanager.entities.User;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -21,10 +16,6 @@ public class ActionDto {
     private Double sum;
 
     private String message;
-
-    private Short actionTypeId;
-
-    private String actionType;
 
     private Long categoryId;
 

@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "types")
+@Table(name = "categories_types")
 @Data
-public class ActionType {
+public class CategoryType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

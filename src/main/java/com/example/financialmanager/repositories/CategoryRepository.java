@@ -1,6 +1,5 @@
 package com.example.financialmanager.repositories;
 
-import com.example.financialmanager.entities.ActionType;
 import com.example.financialmanager.entities.Category;
 import jakarta.annotation.Nonnull;
 import org.springframework.data.jpa.repository.JpaRepository;
