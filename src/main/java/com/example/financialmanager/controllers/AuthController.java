@@ -1,21 +1,11 @@
 package com.example.financialmanager.controllers;
 
 import com.example.financialmanager.dtos.JwtRequest;
-import com.example.financialmanager.entities.User;
 import com.example.financialmanager.services.AuthService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -25,6 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/v1/")
 @RequiredArgsConstructor
+@CrossOrigin/*(origins = {"http://192.168.0.73:3000", "http://localhost:3000"})*/
 public class AuthController {
     @Value("${jwt.lifetime.refresh_token}")
     private Duration jwtLifeRefreshTime;
@@ -33,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/auth")
     public ResponseEntity<?> auth(@RequestBody JwtRequest jwtRequest){
-        //Установка кука
+        System.out.println(jwtRequest.toString());
         return authService.createAuthToken(jwtRequest);
     }
 

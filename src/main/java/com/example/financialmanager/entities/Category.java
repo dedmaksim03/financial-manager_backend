@@ -3,6 +3,8 @@ package com.example.financialmanager.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Optional;
+
 @Entity
 @Table(name = "categories")
 @Data
@@ -27,4 +29,8 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Optional<Category> getCategory() {
+        return Optional.ofNullable(category);
+    }
 }

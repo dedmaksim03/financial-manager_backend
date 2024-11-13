@@ -1,6 +1,7 @@
 package com.example.financialmanager.services;
 
 import com.example.financialmanager.dtos.ActionDto;
+import com.example.financialmanager.dtos.CategoryDto;
 import com.example.financialmanager.entities.Action;
 import com.example.financialmanager.entities.Category;
 import com.example.financialmanager.entities.User;
@@ -8,8 +9,7 @@ import com.example.financialmanager.repositories.ActionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,5 +66,28 @@ public class ActionService {
                 newAction.getAccount().getId(),
                 newAction.getAccount().getName(),
                 null);
+    }
+
+    public List<CategoryDto> getCategoryDtoListByUser(User user){
+        Map<Category, Float> categories = new HashMap<>();
+        List<Category> categoriesList = categoryService.getCategoriesByUser(user);
+        for (Category category: categoriesList){
+            categories.put(category, 0f);
+        }
+        List<Action> actions = getActionsByUser(user);
+        for (Action action: actions){
+            double newSum = categories.get(action.getCategory()) + action.getSum();
+            categories.put(action.getCategory(), (float) newSum);
+        }
+        List<CategoryDto> listCategoryDto = new ArrayList<>();
+        for (Category category: categories.keySet()){
+            listCategoryDto.add(new CategoryDto(
+                    category.getId(),
+                    category.getName(),
+                    category.getCategoryType().getName(),
+                    categories.get(category)
+            ));
+        }
+        return listCategoryDto;
     }
 }
