@@ -3,9 +3,15 @@ package com.example.financialmanager.services;
 import com.example.financialmanager.dtos.AppError;
 import com.example.financialmanager.dtos.JwtRequest;
 import com.example.financialmanager.dtos.JwtResponse;
+import com.example.financialmanager.entities.User;
+import com.example.financialmanager.repositories.RefreshTokenRepository;
 import com.example.financialmanager.utils.JwtTokenUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,12 +19,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    @Value("${jwt.lifetime.refresh_token}")
+    private Duration jwtLifeRefreshTime;
+
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final RefreshTokenService refreshTokenService;
 
     public ResponseEntity<?> createAuthToken(JwtRequest authRequest){
         try {
@@ -29,6 +43,39 @@ public class AuthService {
 
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        String refreshToken = createRefreshToken(userService.findByUsername(authRequest.getUsername()).get());
+
+        HttpHeaders headers = new HttpHeaders();
+        ResponseCookie newRefreshCookie = ResponseCookie.from("refresh_token", refreshToken)
+                .httpOnly(true) // Только для HTTP
+                .secure(true) // Использовать только через HTTPS
+                    .path("/") // Доступно на всех страницах сайта
+                .maxAge(jwtLifeRefreshTime.toSeconds()) // Время жизни в секундах
+                .sameSite("Strict") // Ограничить использование между доменами
+                .build();
+
+        headers.add(HttpHeaders.SET_COOKIE, newRefreshCookie.toString());
+//        return ResponseEntity.ok(new JwtResponse(token, refreshToken));
+        return new ResponseEntity<>(new JwtResponse(token, refreshToken), headers, HttpStatus.OK);
+    }
+
+    public String createAuthToken(User user){
+        UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
+        return jwtTokenUtils.generateToken(userDetails);
+    }
+
+    /** * Создает новый refresh токен для указанного пользователя. */
+    public String createRefreshToken(User user) {
+        return refreshTokenService.createRefreshToken(user);
+    }
+
+    public User validateRefreshToken(String token) {
+        return refreshTokenService.validateRefreshToken(token);
+    }
+
+    /** * Удаление refresh токена после его использования. * * @param token - токен, который нужно удалить. */
+    @Transactional
+    public void deleteByToken(String token) {
+        refreshTokenService.deleteByToken(token);
     }
 }
