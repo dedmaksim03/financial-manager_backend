@@ -13,4 +13,6 @@ public class CategoryDto {
     private String categoryType;
 
     private Float sumCategory;
+
+    private String categoryColor;
 }

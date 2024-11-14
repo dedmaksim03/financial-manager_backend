@@ -85,7 +85,8 @@ public class ActionService {
                     category.getId(),
                     category.getName(),
                     category.getCategoryType().getName(),
-                    categories.get(category)
+                    categories.get(category),
+                    category.getColor()
             ));
         }
         return listCategoryDto;

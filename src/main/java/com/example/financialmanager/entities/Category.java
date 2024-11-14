@@ -18,6 +18,9 @@ public class Category {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "color")
+    private String color;
+
     @ManyToOne
     @JoinColumn(name = "root_id")
     private Category category;

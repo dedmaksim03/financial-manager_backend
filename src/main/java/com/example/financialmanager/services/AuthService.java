@@ -19,8 +19,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -48,15 +51,43 @@ public class AuthService {
         HttpHeaders headers = new HttpHeaders();
         ResponseCookie newRefreshCookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true) // Только для HTTP
-                .secure(true) // Использовать только через HTTPS
+//                .secure(true) // Использовать только через HTTPS
                     .path("/") // Доступно на всех страницах сайта
                 .maxAge(jwtLifeRefreshTime.toSeconds()) // Время жизни в секундах
                 .sameSite("Strict") // Ограничить использование между доменами
                 .build();
 
         headers.add(HttpHeaders.SET_COOKIE, newRefreshCookie.toString());
+//        headers.add("Access-Control-Allow-Credentials", "true");
 //        return ResponseEntity.ok(new JwtResponse(token, refreshToken));
         return new ResponseEntity<>(new JwtResponse(token, refreshToken), headers, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> logout(Principal principal){
+        try {
+            User user = userService.findByUsername(principal.getName()).get();
+
+            HttpHeaders headers = new HttpHeaders();
+
+            // Удаляем старый refresh токен из куков
+            ResponseCookie oldRefreshCookie = ResponseCookie.from("refresh_token", "")
+                    .httpOnly(true)
+//                    .secure(true)
+                    .path("/")
+                    .maxAge(0) // Сбрасываем время жизни до нуля, чтобы удалить куки
+                    .sameSite("Strict")
+                    .build();
+
+            headers.add(HttpHeaders.SET_COOKIE, oldRefreshCookie.toString());
+
+            refreshTokenService.deleteByUser(user);
+
+            Map<String, Object> response = new HashMap<>();
+            return new ResponseEntity<>(headers, HttpStatus.OK);
+        } catch (RuntimeException ex){
+            System.out.println(ex.getMessage());
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+        }
     }
 
     public String createAuthToken(User user){
