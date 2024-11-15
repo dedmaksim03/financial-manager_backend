@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.security.Principal;
 import java.time.Duration;
@@ -45,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/refresh")
-    public ResponseEntity<?> refreshToken(HttpServletRequest request) throws BadRequestException {
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) throws BadRequestException, HttpClientErrorException.Unauthorized {
         String refreshToken = extractRefreshTokenFromCookies(request);
 
         if (refreshToken == null) {
@@ -60,7 +61,7 @@ public class AuthController {
             String newRefreshToken = authService.createRefreshToken(user);
 
             Map<String, Object> response = new HashMap<>();
-            response.put("access_token", accessToken);
+            response.put("token", accessToken);
 
             HttpHeaders headers = new HttpHeaders();
 
@@ -70,7 +71,7 @@ public class AuthController {
 //                    .secure(true)
                     .path("/")
                     .maxAge(0) // Сбрасываем время жизни до нуля, чтобы удалить куки
-                    .sameSite("Strict")
+//                    .sameSite("Strict")
                     .build();
 
             headers.add(HttpHeaders.SET_COOKIE, oldRefreshCookie.toString());
@@ -81,7 +82,7 @@ public class AuthController {
 //                    .secure(true) // Использовать только через HTTPS
                     .path("/") // Доступно на всех страницах сайта
                     .maxAge(jwtLifeRefreshTime.toSeconds()) // Время жизни в секундах
-                    .sameSite("Strict") // Ограничить использование между доменами
+//                    .sameSite("Strict") // Ограничить использование между доменами
                     .build();
 
             headers.add(HttpHeaders.SET_COOKIE, newRefreshCookie.toString());
@@ -96,6 +97,7 @@ public class AuthController {
     }
 
     private String extractRefreshTokenFromCookies(HttpServletRequest request) {
+        System.out.println(request.getHeaderNames());
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
@@ -106,7 +108,7 @@ public class AuthController {
             }
         }
 
-        System.out.println(Arrays.toString(cookies));
+        System.out.println(Arrays.toString(cookies) + "cookie");
         return null;
     }
 }

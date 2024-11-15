@@ -54,7 +54,7 @@ public class AuthService {
 //                .secure(true) // Использовать только через HTTPS
                     .path("/") // Доступно на всех страницах сайта
                 .maxAge(jwtLifeRefreshTime.toSeconds()) // Время жизни в секундах
-                .sameSite("Strict") // Ограничить использование между доменами
+//                .sameSite("Strict") // Ограничить использование между доменами
                 .build();
 
         headers.add(HttpHeaders.SET_COOKIE, newRefreshCookie.toString());
