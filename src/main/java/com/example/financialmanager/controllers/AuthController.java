@@ -87,7 +87,8 @@ public class AuthController {
 
             headers.add(HttpHeaders.SET_COOKIE, newRefreshCookie.toString());
 
-            authService.deleteByToken(refreshToken);
+            System.out.println("Now delete token: " + refreshToken);
+//            authService.deleteByToken(refreshToken);
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
         } catch (RuntimeException ex) {
             System.out.println(ex.getMessage());

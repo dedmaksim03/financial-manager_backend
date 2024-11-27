@@ -97,6 +97,7 @@ public class AuthService {
 
     /** * Создает новый refresh токен для указанного пользователя. */
     public String createRefreshToken(User user) {
+        refreshTokenService.deleteByUser(user);
         return refreshTokenService.createRefreshToken(user);
     }
 
