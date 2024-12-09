@@ -1,6 +1,7 @@
 package com.example.financialmanager.services;
 
 import com.example.financialmanager.dtos.ActionDto;
+import com.example.financialmanager.dtos.CategoriesDto;
 import com.example.financialmanager.dtos.CategoryDto;
 import com.example.financialmanager.entities.Action;
 import com.example.financialmanager.entities.Category;
@@ -68,7 +69,7 @@ public class ActionService {
                 null);
     }
 
-    public List<CategoryDto> getCategoryDtoListByUser(User user){
+    public CategoriesDto getCategoryDtoListByUser(User user){
         Map<Category, Float> categories = new HashMap<>();
         List<Category> categoriesList = categoryService.getCategoriesByUser(user);
         for (Category category: categoriesList){
@@ -89,6 +90,7 @@ public class ActionService {
                     category.getColor()
             ));
         }
-        return listCategoryDto;
+
+        return new CategoriesDto(listCategoryDto);
     }
 }
