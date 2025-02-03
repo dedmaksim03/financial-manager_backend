@@ -34,6 +34,7 @@ public class ActionService {
                  action.getMessage(),
                  action.getCategory().getId(),
                  action.getCategory().getName(),
+                 action.getCategory().getColor(),
                  action.getAccount().getId(),
                  action.getAccount().getName(),
                  null)).collect(Collectors.toList());
@@ -64,6 +65,7 @@ public class ActionService {
                 newAction.getMessage(),
                 newAction.getCategory().getId(),
                 newAction.getCategory().getName(),
+                newAction.getCategory().getColor(),
                 newAction.getAccount().getId(),
                 newAction.getAccount().getName(),
                 null);

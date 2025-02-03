@@ -21,6 +21,8 @@ public class ActionDto {
 
     private String category;
 
+    private String categoryColor;
+
     private Long accountId;
 
     private String account;
